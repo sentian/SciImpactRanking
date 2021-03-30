@@ -1,4 +1,4 @@
-%!TEX root = main.tex
+%!TEX root = ms.tex
 \clearpage
 \begin{refsection}
 %\renewcommand*{\thepage}{A\arabic{page}}
@@ -6,16 +6,50 @@
 \appendix
 \pagenumbering{arabic}
 \begin{center}
-\textbf{\large Supplemental Materials: On the use of rank percentile in evaluating scientific impacts, and its predictability}
+\textbf{\large Supplemental Material: \\ On the usage of rank percentile in evaluating and predicting the scientific impact}
 
-Panos Ipeirotis, Sen Tian
+Sen Tian, Panos Ipeirotis
 \end{center}
 
-\section{The robustness of rp.rp5}
-\label{sec:robustness_rprp}
-The evaluation metric to formulate rp.rp5$_{i\tau}$ is an aggregation of the performances of all the publications that the author publish by age $\tau$. And to be more specific, we use rp.c$_{j5}$ to evaluate publication $j$, and the evaluation metric is given as the sum of all papers published by $\tau$, i.e. m.rp5$_{i\tau} = \sum_{j=1}^{N_\tau^{(i)}} \text{rp.c}_{j5}$ (the notation m.rp5 is to distinguish from other metrics we are going to study below). rp.c$_{j5}$ only utilizes the citation history of a publication in the first $5$ years. This may not seems to be adequate to represent the quality of a paper. However, as we show in figure \ref{fig:scatter_pubrp_bio1980}, rp,c is highly stable over ages, i.e. rp.c$_{j5}$ is likely to be close to rp.c$_{j10}$ for majority of the papers. 
+\section{Rank percentile indicators for scholars}
+\label{sec:suppl_similarity_autrp}
 
-We can consider other ways of summarizing the performance of a paper, and we show that not only such metrics have high correlations with m.rp5, but the rank percentile indicators based on these metrics are not statistically significantly different from rp.rp5. Consider the entire history that we have for publication $j$: rp.c$_{j1}$, rp.c$_{j2}$, $\cdots$, rp.c$_{j T_j}$. Besides evaluating the publication at certain age, we can use the summary statistic to take advantage of the entire history. For example, we can take the best performance throughout its career, i.e. $\displaystyle \max_{t=1,\cdots,T_j} \text{rp.c}_{jt}$, and aggregate them to formulate the evaluation metric, i.e. m.rpmax$_{i\tau} = \displaystyle \sum_{j=1}^{N_\tau^{(i)}} \max_{t=1,\cdots,T_j} \text{rp.c}_{jt}$. The correlation between m.rp5 and m.rpmax at each fixed age $\tau=1,\cdots,30$ is displayed in figure \ref{fig:robustness_test_cor}, and we can see that these two metrics are highly correlated. Meanwhile, other choices of the evaluation metrics also have high correlations with m.rp5 according to the figure. Furthermore, we construct rp.rpmax based on m.rpmax and study its difference with rp.rp5. We perform a paired t-test on the two samples rp.rpmax and rp.rp5 at each fixed age $\tau=1,\cdots,30$. The p-values that we get are all extremely close to $1$, which indicates that the difference between rp.rpmax and rp.rp5 is not significant. Similar results are obtained for other types: rp.rpmean, rp.rpmedian and rp.rp10. 
+We consider the benchmark being the area of biology. In order to study the agreement of various indicators, for each indicator, we classify the scholars into four classes, class $1$: $0\le \text{S}_m^{ib}(t) < 0.25$, class $2$: $0.25\le \text{S}_m^{ib}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{ib}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{ib}(t) \le 1$. An agreement is when two (or three) different indicators belong to the same class. The overall agreement for all three indicators, S$_{P5}$, S$_c$, and S$_h$, is $51\%$ at age $5$ and $68\%$ at age $30$; that is, for about half of the scholars the three indicators agree with each other at age $5$, while that number becomes around two third at age $30$. Figure \ref{fig:aut_rp_class} displays pairwise agreement of the three indicators. We see that the agreement increases with the age. Furthermore, S$_{P5}$ has large agreement with both S$_{c}$ and S$_{h}$, which are $69\%$ and $67\%$, respectively, at age $5$, and $71\%$ and $81\%$, respectively, at age $30$. 
+
+Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{ib}(t_1)$ and S$_c^{ib}(t_2)$, and the correlation between S$_h^{ib}(t_1)$ and S$_h^{ib}(t_1)$. The magnitudes of correlations are similar to those for S$_{P5}$ as shown in Figure \ref{fig:hm_rp_aut}.
+
+% fig:aut_rp_class
+% class agreement among all the author rp
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.88\textwidth]{figures/compare_autrp/heatmap_class_agreement.eps}
+    \caption[The agreement of rank percentile indicators for scholars]{Rank percentile indicators are classified into four groups, that are class $1$: $0 \le \text{S}_m^{ib}(t) < 0.25$, class $2$: $0.25 \le \text{S}_m^{ib}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{ib}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{ib}(t) \le 1$. The agreement of classes (sum of the anti-diagonal elements) is displayed in the title of each panel. The benchmark is biology. The agreement for all three indicators is $51 \%$ at age $5$ and is $68 \%$ at age $30$.}
+    \label{fig:aut_rp_class}
+\end{figure}
+
+% publication rank percentile, heat map of correlations
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/pred_power/suppl_heatmap_cor_current.eps}
+    \caption[Correlation heatmap for S$_c$ and S$_h$.]{The Pearson's correlation between rank percentile indicators at two different ages. }
+    \label{fig:hm_autrp_current}
+\end{figure}
+
+
+
+\section{Robustness of \texorpdfstring{S$_{P5}$}{Lg}}
+\label{sec:suppl_robustness_P5}
+
+Recall that S$_{P5}^{ib}(t)$ is calculated based on an aggregation of the performances of publications that scholar $i$ publishes by age $t$. Denote $\text{m}_{P5}^{ib}(t)$ as the evaluation metric of scholar $i$ at age $t$ based on $\text{P}_{c}^{jb}(5)$, that is $\text{m}_{P5}^{ib}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{jb}(5)$, where $N(t)$ is the total number of publications of scholar $i$ by age $t$. We illustrated in the paper that P$_c$ exhibits high stability, and hence P$_{c}^{jb}(5)$ can be applied to represent the performance of the publication. 
+
+We further demonstrate the robustness of S$_{P5}$ by considering a longer citation history for each publication. Figure \ref{fig:robustness_test_cor} illustrates that m$_{P5}$ is highly correlated with m$_{P10}$ at age $t=1,\cdots,30$, where $\text{m}_{P10}^{ib}$t$= \sum_{j=1}^{N(t)} \text{P}_{c}^{jb}(10)$. We also consider the maximum, mean and median values of $\text{P}_{c}^{jb}(t)$, e.g. $\text{m}_{Pmax}^{ib}$t$= \sum_{j=1}^{N(t)} \max_{t^\prime}\text{P}_{c}^{jb}(t^\prime)$. We see from the figure that these metrics also exhibit high correlations with m$_{P5}$. Furthermore, we perform a Wilcoxon paired signed-rank test to compare the differences between S$_{P5}$ and S$_{P10}$ at each age $t=1,\cdots,30$, and the p-values are close to $1$; indicating that the differences are not statistically significant. Similar conclusions can be drawn for other indicators being considered.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/robustness/cor.eps}
+    \caption[Correlation between m$_{P5}$ and other choices of evaluation metric]{Pearson's correlation between m$_{P5}$ and other choices of evaluation metric. Age $10$, max, mean and median correspond to m$_{P10}$, m$_{Pmax}$, m$_{Pmean}$ and m$_{Pmedian}$, respectively. The correlation is calculated at each age $t=1,\cdots,30$.}
+    \label{fig:robustness_test_cor}
+\end{figure}
 
 
 \iffalse
@@ -37,29 +71,49 @@ We take the maximum performance for each of the $N$ papers, and sum them:
 \fi
 
 \section{Stationarity test}
-\label{sec:stationarity_test}
-Two commonly used statistical tests for stationarity are the Dicky-Fuller test\supercite{dickey1979distribution} and KPSS test\supercite{kwiatkowski1992testing}. Two tests formulate the hypothesis testing problem differently. Dicky-Fuller test assumes a unit root is present in the series. A unit root means the series is $I(1)$, i.e. integrated order $1$ and the first differenced series is stationary. The more negative the test statistic is, the stronger the rejection of the null. On the other hand, KPSS test assumes the null as the series being stationary, i.e. $I(0)$. KPSS test is slightly more general since it allows testing a series being non-stationary but doesn't present a unit root. The more positive the test statistic is, the stronger the rejection of the null. Both tests include the drift in the test equations but exclude the trend, since we do not observe significant trends in the series. 
+\label{sec:suppl_stationarity}
 
-We apply these tests on each individual rp series. The test statistics are shown in figure \ref{fig:stationarity_test}. The dashed lines indicate the critical values at $5 \%$ level. KPSS test indicates that rp$^{(c)}$ and rp.rp5$^{(c)}$ are non-stationary, and we don't have enough evidence to reject them being $I(1)$ according to the Dicky-Fuller test. Meanwhile, the differenced series are stationary based on both tests.
+Two commonly used statistical tests for stationarity are the Dicky-Fuller test~\cite{dickey1979distribution} and KPSS test~\cite{kwiatkowski1992testing}. These two tests formulate the hypothesis testing problems differently. Dicky-Fuller test assumes a unit root presented in the series. A unit root means that the series is $I(1)$, i.e. integrated order $1$ and the first differenced series is stationary. The more negative the test statistic is, the stronger the rejection of the null. On the other hand, KPSS test assumes the null as the series being stationary, i.e. $I(0)$. KPSS test is slightly more general since it allows testing a series being non-stationary but does not present a unit root. The more positive the test statistic is, the stronger the rejection of the null. Both tests include the drift in the test equations but exclude the trend, since we do not observe significant trends in the series. 
 
-\printbibliography[heading=subbibliography]
+The test statistics are shown in Figure \ref{fig:stationarity_test}. The dashed lines indicate the critical values at $5 \%$ level. KPSS test indicates that P$_c$ and S$_{P5}$ are non-stationary series, and we do not have enough evidence to reject them being $I(1)$ according to the Dicky-Fuller test. Furthermore, the differenced series are stationary based on both tests.
 
 
-\clearpage
-\section{Tables and figures}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/stationarity/df_kpss.eps}
+    \caption[Stationarity test of rank percentile series]{Statistical tests for the stationarity of rank percentile series. Both tests are applied on every individual series, and the test statistics are presented. The $5\%$ critical value for each test is illustrated by the dashed horizontal line. Both tests suggest that publication indicator P$_c$ and scholar indicator S$_{P5}$ are non-stationary, while their differenced series are stationary. }
+    \label{fig:stationarity_test}
+\end{figure}
+
+\iffalse
+\section{Details of the predictive models}
+\label{sec:suppl_details_predmodel}
+
+The details of the predictive models are described below.
+\begin{itemize}
+    \item Baseline: simple linear regression of P$_{it_2}^c$ on P$_{it_1}^c$. Same applies for S$_{it}^{P5}$.
+    \item Simple Markov model (sm): linear regression of P$_{it_2}^c$ on P$_{it_1}^c$ and the change of P$_{it}^c$ over the last $2$ ages, i.e. P$_{it_1}^c$-P$_{it_1-2}^c$. Same applies for S$_{it}^{P5}$.
+    \item Penalized linear regression models, including the ridge, lasso, elastic net (enet) and the Gamma lasso (gamlr): linear models with different penalties on the regression coefficients. All of these methods shrink the coefficients towards zero, and the later three methods can provide sparse solutions (shrink the coefficients to be exactly zeros). 
+    \item Ensemble methods of regression trees, including the random forest (rf) and extreme gradient boosting trees (xgbtree): rf is a bagging of regression trees with a subset of randomly selected features chosen at each split to avoid overfitting. xgbtree is a fast implementation of gradient boosting on regression trees with a model formation that emphasizes the role of regularizations to avoid overfitting.
+    %\item Support vector regression (svr)~\cite{drucker1997support}: 
+    \item Neural networks (nnet): feedforward networks with multiple hidden layers, and using dropout and $l_2$ regularization to avoid overfitting.
+\end{itemize}
+\fi
+
+
 \begin{table}[htbp]
   \centering
     \begin{tabular}{l|l}
     Method & Tuning parameters \\
     \midrule
-    LASSO & Penalty strength parameter \\
+    Lasso & Penalty strength parameter \\
     \midrule
     Ridge & Penalty strength parameter \\
     \midrule
     \multirow{2}[2]{*}{Elastic net} & Penalty strength parameter \\
           & Penalty gap parameter \\
     \midrule
-    \multirow{2}[2]{*}{Gamma LASSO} & Penalty strength parameter \\
+    \multirow{2}[2]{*}{Gamma lasso} & Penalty strength parameter \\
           & Convexity parameter \\
     \midrule
     \multirow{3}[2]{*}{Random forest} & Number of trees to grow \\
@@ -82,7 +136,7 @@ We apply these tests on each individual rp series. The test statistics are shown
           & Dropout rate \\
           & Regularization parameter \\
     \end{tabular}%
-  \caption{Hyper-parameter(s) of the machine learning models.}
+  \caption[Hyperparameter(s) of the machine learning models]{Hyperparameter(s) of the machine learning models.}
   \label{tab:hyperpara}%
 \end{table}%
 
@@ -92,25 +146,25 @@ We apply these tests on each individual rp series. The test statistics are shown
     Feature & Description \\
     \midrule
     pub\_cit\_cumulative & total citations of publication $j$ \\
-    pub\_cit\_yearly & citations of publication $j$ at age $\tau_1$ \\
-    pub\_cit\_peryear & average citations of publication $j$ per age \\
-    pub\_rp\_cumulative & rank percentile indicator calculated based on total citations, i.e. rp.c$_{j\tau_1}$ \\
-    pub\_rp\_yearly & rank percentile indicator calculated based on yearly citations \\
+    pub\_cit\_yearly & yearly citations of publication $j$ received in $t_1$ \\
+    pub\_cit\_peryear & average citations of publication $j$ over age \\
+    pub\_rp\_cumulative & rank percentile indicator calculated based on total citations, i.e. P$_c^{jb}(t_1)$ \\
+    pub\_rp\_yearly & rank percentile indicator calculated based on yearly citations at $t_1$\\
           &  \\
     aut\_cit\_cumulative          & total citations of author $i$ \\
-    aut\_cit\_yearly          & citations of author $i$ at age $\tau_1$ \\
+    aut\_cit\_yearly          & yearly citations of author $i$ at $t_1$ \\
     aut\_npub\_cumulative & total number of publications of author $i$ \\
-    aut\_npub\_yearly & number of publications of author $i$ at age $\tau_1$ \\
-    aut\_cit\_perpaper & average citations per paper of author $i$  \\
+    aut\_npub\_yearly & yearly number of publications of author $i$ at $t_1$ \\
+    aut\_cit\_perpaper & average citations per paper for author $i$  \\
     aut\_h\_index & h-index of author $i$  \\
     aut\_g\_index & g-index of author $i$ \\
-    aut\_maxcit\_pub & largest citations that a single paper of author $i$ has received \\
-    aut\_rprp5\_cumulative & author rank percentile calculated based on all papers, i.e. rp.rp5$_{i\tau_1}$ \\
-    aut\_rprp5\_yearly & author rank percentile calculated based on papers written at $\tau_1$ \\
+    aut\_maxcit\_pub & largest citation that a single paper of author $i$ has received \\
+    aut\_rprp5\_cumulative & rank percentile calculated based on all papers, i.e. S$_{P5}^{ib}(t_1)$ \\
+    aut\_rprp5\_yearly & rank percentile calculated based on just papers written at $t_1$ \\
           &  \\
     *\_delta & the difference over the last two ages for each of the above features \\
     \end{tabular}%
-  \caption{Features for predicting the impact of publication $j$. The features are created at $\tau_1$.}
+  \caption[Features for predicting the publication impact]{Features for predicting the impact of publication $j$ of scholar $i$. The features are created at $t_1$.}
   \label{tab:features_pubrp}%
 \end{table}%
 
@@ -120,83 +174,81 @@ We apply these tests on each individual rp series. The test statistics are shown
     Feature & Description \\
     \midrule
     aut\_cit\_cumulative & total citations of author $i$ \\
-    aut\_cit\_yearly & citations of author $i$ at age $\tau_1$ \\
+    aut\_cit\_yearly & yearly citations of author $i$ at age $t_1$ \\
     aut\_npub\_cumulative & number of publications of author $i$ \\
-    aut\_npub\_yearly & number of publications of author $i$ at age $\tau_1$ \\
+    aut\_npub\_yearly & yearly number of publications of author $i$ at age $t_1$ \\
     aut\_h\_index & h-index of author $i$ \\
     aut\_g\_index & g-index of author $i$ \\
     aut\_cit\_peryear & average citations per age of author $i$ \\
-    aut\_rprp5\_cumulative & author rank percentile calculated using all publications, i.e. rprp5$_{i\tau_1}$ \\
-    aut\_rprp5\_yearly & author rank percentile calculated using publications written in age $\tau_1$ \\
+    aut\_rprp5\_cumulative & rank percentile calculated using all publications, i.e. S$_{P5}^{ib}(t_1)$ \\
+    aut\_rprp5\_yearly & rank percentile calculated using just publications written in age $t_1$ \\
           &  \\
     pub\_cit\_cumulative\_\{min,mean,max\} & citations received by each of the publications \\
-    pub\_cit\_yearly\_\{min,mean,max\} & citations received by each of the publications written in age $\tau_1$ \\
+    pub\_cit\_yearly\_\{min,mean,max\} & citations received by each of the publications written at age $t_1$ \\
     pub\_rp\_cumulative\_\{min,mean,max\} & publication rank percentiles calculated based on total citations \\
-    pub\_rp\_yearly\_\{min,mean,max\} & publication rank percentiles calculated based on citations in age $\tau_1$ \\
+    pub\_rp\_yearly\_\{min,mean,max\} & publication rank percentiles calculated based on citations at age $t_1$ \\
           &  \\
     *\_delta & the difference over the last two ages for each of the above features \\
     \end{tabular}%
-  \caption{Features for predicting the impact of author $i$. The features are created at $\tau_1$.}
+  \caption[Features for predicting the scholar impact]{Features for predicting the impact of scholar $i$. The features are created at $t_1$.}
   \label{tab:features_autrp}%
 \end{table}%
+
+
+
+
+
+\clearpage
+\section{Other tables and figures}
+% exploratory statistics of the data
+\begin{table}[ht]
+\centering
+\begin{tabular}{c|c|c|c}
+ benchmark     & all   & biology & tenured \\
+\midrule
+\# publications & 801239 & 194713 & 176404 \\
+\# scholars & 14358 & 3410  & 2706 \\
+\# citations per publication by age 5  & 45    & 56    & 49 \\
+\# citations per scholar by age 5 & 172   & 209   & 332 \\
+\end{tabular}%
+\caption[Summary statistics of the dataset]{Summary statistics of the dataset. }
+\label{tab:exploratory}
+\end{table}
 
 % exploratory plots of the data
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/exploratory/npub_ncitperpub_naut.eps}
-    \caption{\textbf{Left panel}: number of publications; \textbf{middle panel}: average number of citations per publication by age $5$, for papers published in a certain period; \textbf{right panel}: number of authors who start their careers in a certain period. Newer publications have more citations (on average) than the older ones, due to the seniority effect of an author. The authors in our dataset remain active by year $2016$ and their publications in the early stage of career is usually less recognizable and attracts less citations, than those published more recently. Meanwhile, publications in biology generally have more citations per paper, which corresponds to the fact that biology is a highly productive field and it attracts a large number of citations.}
+    \includegraphics[width=0.8\textwidth]{figures/exploratory/npub_naut.eps}
+    \caption[Exploratory statistics of the dataset]{\textbf{Left panel}: number of papers published in a certain period; \textbf{right panel}: number of authors who start their careers in a certain period. }
     \label{fig:exploratory}
 \end{figure}
 
-% publication rank percentile, heat map of correlations
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/pred_power/current/heatmap_cor_autrp.eps}
-    \caption{The Pearson's correlation between rp indicators at two different ages. The benchmark either includes all publications or only publications in biology.}
-    \label{fig:hm_autrp_current}
-\end{figure}
-
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/pred_power/autrp/scatter_all.eps}
-    \caption{Kernel density estimation of the scatters of S$_{i t_1}$ and S$_{i t_2}$. Meanwhile, we fit a simple linear regression of S$_{i t_2}$ upon S$_{i t_1}$. The estimated coefficient and the corresponding standard error (in the bracket) are displayed in each facet. The benchmark here is all.}
+    \includegraphics[width=\textwidth]{figures/pred_power/scatter_autrp_all.eps}
+    \caption[Kernel density estimation for the scatters of S$_{P5}(t_1)$ and S$_{P5}(t_2)$]{Kernel density estimation for the scatter points of S$_{P5}^{ib}(t_1)$ and S$_{P5}^{ib}(t_2)$. We also fit a simple linear regression of S$_{P5}^{ib}(t_2)$ on S$_{P5}^{ib}(t_1)$. The estimated coefficient and the corresponding standard error (in the parentheses) are displayed in each plot.}
     \label{fig:scatter_autrp_all}
 \end{figure}
 
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/robustness_test/cor.eps}
-    \caption{Pearson's correlation between m.rp5 and other evaluation metrics.}
-    \label{fig:robustness_test_cor}
-\end{figure}
-
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/stationarity_test/drift.eps}
-    \caption{Statistical tests for the stationarity of rp series. Each test is applied on every individual rp series, and the test statistics are presented. Meanwhile, the $5 \%$ critical value for each test is shown as the dashed horizontal line. Both tests suggest that publication rp.c and scholar rp.rp5 are likely to be non-stationary. Meanwhile, both tests show evidence that the differenced series can be stationary. }
-    \label{fig:stationarity_test}
-\end{figure}
-
-\begin{figure}[ht!]
-    \centering
-    \includegraphics[width=\textwidth]{figures/pred_model/rmse_diff.eps}
-    \caption{Root mean squared error (RMSE) of the predictive models. LASSO, ridge and elastic net are outperformed by Gamma LASSO, and hence are ignored for a better visualization.}
+    \includegraphics[width=\textwidth]{figures/pred_model/rmse.eps}
+    \caption[RMSE of the predictive models]{Root mean squared error of the predictive models. The lasso, ridge and elastic net are outperformed by Gamma lasso, and hence are ignored for a better visualization.}
     \label{fig:pred_rmse}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/pred_model/medse_diff.eps}
-    \caption{Root median squared error (RMEDSE) of the predictive models. LASSO, ridge and elastic net are outperformed by Gamma LASSO, and hence are ignored for a better visualization.}
+    \includegraphics[width=\textwidth]{figures/pred_model/medse.eps}
+    \caption[RMESE of the predictive models]{Root median squared error of the predictive models.}
     \label{fig:pred_medse}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/pred_model/mae_diff.eps}
-    \caption{Mean absolute error (MAE) of the predictive models. LASSO, ridge and elastic net are outperformed by Gamma LASSO, and hence are ignored for a better visualization.}
+    \includegraphics[width=\textwidth]{figures/pred_model/mae.eps}
+    \caption[MAE of the predictive models]{Mean absolute error of the predictive models.}
     \label{fig:pred_mae}
 \end{figure}
 
@@ -307,4 +359,5 @@ Figure \ref{fig:compare_autrp} shows various types of scholar rank percentile in
 \end{figure}
 
 \fi
+
 \end{refsection}
