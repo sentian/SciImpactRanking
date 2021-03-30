@@ -1,2 +1,4 @@
 *.rds filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
+* linguist-vendored
+*.R linguist-vendored=false
