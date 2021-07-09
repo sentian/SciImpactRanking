@@ -180,7 +180,7 @@ plot.stationarity.tenured <- function(DT_pub, DT_aut, age.fix=10, chop.percent=1
   pp = make.plot(DT_aut[age == age.fix & start >= 1980 & !is.na(S.P5.tenured), c('start', 'S.P5.tenured')], 
                  chop.percent=chop.percent,
                  x.label = 'starting year of careers', 
-                 y.label = bquote('rank percentiles at age 10,'~S[P5](10)), 
+                 y.label = bquote('rank percentiles at age 10,'~S[P5]^i~(10)), 
                  title = '')
   
   # print to file
@@ -190,7 +190,6 @@ plot.stationarity.tenured <- function(DT_pub, DT_aut, age.fix=10, chop.percent=1
   dev.off()
 }
 plot.stationarity.tenured(DT_pub, DT_aut)
-
 ### Figure 4 & 5: long-term predictability of publication citations and RP --------
 plot.predictability.cit.rp <- function(DT_pub, width = 10, height = 8, label.size = 16){
   make.plot <- function(p1, file.name){
@@ -216,7 +215,7 @@ plot.predictability.cit.rp <- function(DT_pub, width = 10, height = 8, label.siz
   # plot their rank percentiles as a function of age
   p1 = ggplot(data=data_toplot, aes(x=age, y=P.c.bio, group=pub.id)) + geom_line()
   # p1 = p1 + ylab(label = expression(P[j~t]^c)) + xlab(label = 't')
-  p1 = p1 + ylab(label = bquote('rank percentiles,' ~ P[c])) + xlab(label = 't')
+  p1 = p1 + ylab(label = bquote('rank percentiles,' ~ P[c]^j~(t))) + xlab(label = 't')
   make.plot(p1, 'rp_t')
   
   # specify the intervals based on which we separate the publications
@@ -249,11 +248,11 @@ plot.predictability.cit.rp <- function(DT_pub, width = 10, height = 8, label.siz
   region_right = max(data_toplot$P.c.bio.30)
   p1 = p1 + geom_rect(aes(xmin=region_left, xmax=region_right, ymin=0, ymax=1), fill=3, alpha=0.01)
   p1 = p1 + scale_x_continuous(# name = expression(bar(P)[j~30]^c),
-    name = bquote('average rank percentiles at age 30,' ~ P[c](30)),
+    name = bquote('average rank percentiles at age 30,' ~ P[c]^j~(30)),
     breaks = c(-2.5, 0, 2.5, region_left, region_right), 
     labels = numformat(1/(1+exp(-c(-2.5, 0, 2.5, region_left, region_right)))))
   # p1 = p1 + ylab(label = expression(bar(P)[j~5]^c)) 
-  p1 = p1 + ylab(label = bquote('average rank percentiles at age 5,' ~ P[c](5)))
+  p1 = p1 + ylab(label = bquote('average rank percentiles at age 5,' ~ P[c]^j~(5)))
   make.plot(p1, 'rp_rp')
 }
 plot.predictability.cit.rp(DT_pub)
@@ -419,10 +418,10 @@ plot.scatter <- function(DT, puboraut, filename, specify.bandwidth=FALSE){
   #p1 = p1 + xlab(label=expression( rp[. *tau[2]]^(c) )) + ylab(label=expression( rp[. *tau[1]]^(c) ))
   if(puboraut == 'pub'){
     # p1 = p1 + xlab(label=expression( P[j~t[2]]^c )) + ylab(label=expression( P[j~t[1]]^c ))
-    p1 = p1 + xlab(label=expression( P[c](t[2]) )) + ylab(label=expression( P[c](t[1]) ))
+    p1 = p1 + xlab(label=expression( P[c]^j~(t[2]) )) + ylab(label=expression( P[c]^j~(t[1]) ))
   }else if(puboraut == 'aut'){
     # p1 = p1 + xlab(label=expression( S[i~t[2]]^{P5} )) + ylab(label=expression( S[i~t[1]]^{P5} ))
-    p1 = p1 + xlab(label=expression( S[P5](t[2]) )) + ylab(label=expression( S[P5](t[1]) ))
+    p1 = p1 + xlab(label=expression( S[P5]^i~(t[2]) )) + ylab(label=expression( S[P5]^i~(t[1]) ))
   }
   
   #p1 = p1 + ggtitle(title)
@@ -786,3 +785,5 @@ for(benchmark in c('all', 'bio', 'tenured')){
   print( paste0( "Benchmark ", benchmark, ", # citations per scholar by age 5: ",
          round(mean( DT_aut[age == 5 & aut.id %in% aut_id_benchmark, ]$cum.citations ))))
 }
+
+

@@ -6,24 +6,25 @@
 \appendix
 \pagenumbering{arabic}
 \begin{center}
-\textbf{\large Supplemental Material: \\ On the usage of rank percentile in evaluating and predicting the scientific impact}
+\textbf{\large Supplemental Material: \\ On the Predictability of Utilizing Rank Percentile to Evaluate Scientific Impact}
 
 Sen Tian, Panos Ipeirotis
 \end{center}
 
-\section{Rank percentile indicators for scholars}
+\section{Rank Percentile Indicators for Scholars}
 \label{sec:suppl_similarity_autrp}
 
-We consider the benchmark being the area of biology. In order to study the agreement of various indicators, for each indicator, we classify the scholars into four classes, class $1$: $0\le \text{S}_m^{ib}(t) < 0.25$, class $2$: $0.25\le \text{S}_m^{ib}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{ib}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{ib}(t) \le 1$. An agreement is when two (or three) different indicators belong to the same class. The overall agreement for all three indicators, S$_{P5}$, S$_c$, and S$_h$, is $51\%$ at age $5$ and $68\%$ at age $30$; that is, for about half of the scholars the three indicators agree with each other at age $5$, while that number becomes around two third at age $30$. Figure \ref{fig:aut_rp_class} displays pairwise agreement of the three indicators. We see that the agreement increases with the age. Furthermore, S$_{P5}$ has large agreement with both S$_{c}$ and S$_{h}$, which are $69\%$ and $67\%$, respectively, at age $5$, and $71\%$ and $81\%$, respectively, at age $30$. 
+We consider the benchmark being the field of biology. In order to study the agreement of various indicators, for each indicator, we classify the scholars into four classes, class $1$: $0\le \text{S}_m^{i}(t) < 0.25$, class $2$: $0.25\le \text{S}_m^{i}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{i}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{i}(t) \le 1$. An agreement is when two (or three) different indicators belong to the same class. The overall agreement for all three indicators, S$_{P5}$, S$_c$, and S$_h$, is $51\%$ at age $5$ and $68\%$ at age $30$; that is, for about half of the scholars the three indicators agree with each other at age $5$, while that number becomes around two third at age $30$. Figure \ref{fig:aut_rp_class} displays pairwise agreement of the three indicators. We see that the agreement increases with the age. Furthermore, S$_{P5}$ has large agreement with both S$_{c}$ and S$_{h}$, which are $69\%$ and $67\%$, respectively, at age $5$, and $71\%$ and $81\%$, respectively, at age $30$. 
 
-Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{ib}(t_1)$ and S$_c^{ib}(t_2)$, and the correlation between S$_h^{ib}(t_1)$ and S$_h^{ib}(t_1)$. The magnitudes of correlations are similar to those for S$_{P5}$ as shown in Figure \ref{fig:hm_rp_aut}.
+Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{i}(t_1)$ and S$_c^{i}(t_2)$, and the correlation between S$_h^{i}(t_1)$ and S$_h^{i}(t_2)$. The magnitudes of correlations are similar to those for S$_{P5}$ as shown in Figure \ref{fig:hm_rp_aut}.
 
 % fig:aut_rp_class
 % class agreement among all the author rp
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.88\textwidth]{figures/compare_autrp/heatmap_class_agreement.eps}
-    \caption[The agreement of rank percentile indicators for scholars]{Rank percentile indicators are classified into four groups, that are class $1$: $0 \le \text{S}_m^{ib}(t) < 0.25$, class $2$: $0.25 \le \text{S}_m^{ib}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{ib}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{ib}(t) \le 1$. The agreement of classes (sum of the anti-diagonal elements) is displayed in the title of each panel. The benchmark is biology. The agreement for all three indicators is $51 \%$ at age $5$ and is $68 \%$ at age $30$.}
+    \caption{{\bf The Agreement of Rank Percentile Indicators for Scholars.} 
+    Rank percentile indicators are classified into four groups, that are class $1$: $0 \le \text{S}_m^{i}(t) < 0.25$, class $2$: $0.25 \le \text{S}_m^{i}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{i}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{i}(t) \le 1$. The agreement of classes (sum of the anti-diagonal elements) is displayed in the title of each panel. The benchmark is biology. The agreement for all three indicators is $51 \%$ at age $5$ and is $68 \%$ at age $30$.}
     \label{fig:aut_rp_class}
 \end{figure}
 
@@ -31,7 +32,8 @@ Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{ib}(t_1)$ 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/pred_power/suppl_heatmap_cor_current.eps}
-    \caption[Correlation heatmap for S$_c$ and S$_h$.]{The Pearson's correlation between rank percentile indicators at two different ages. }
+    \caption{{\bf Pearson Correlation between Rank Percentiles at Different Ages.} 
+    This supplements the results in Figure \ref{fig:hm_rp_aut}.}
     \label{fig:hm_autrp_current}
 \end{figure}
 
@@ -40,14 +42,15 @@ Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{ib}(t_1)$ 
 \section{Robustness of \texorpdfstring{S$_{P5}$}{Lg}}
 \label{sec:suppl_robustness_P5}
 
-Recall that S$_{P5}^{ib}(t)$ is calculated based on an aggregation of the performances of publications that scholar $i$ publishes by age $t$. Denote $\text{m}_{P5}^{ib}(t)$ as the evaluation metric of scholar $i$ at age $t$ based on $\text{P}_{c}^{jb}(5)$, that is $\text{m}_{P5}^{ib}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{jb}(5)$, where $N(t)$ is the total number of publications of scholar $i$ by age $t$. We illustrated in the paper that P$_c$ exhibits high stability, and hence P$_{c}^{jb}(5)$ can be applied to represent the performance of the publication. 
+Recall that S$_{P5}^{i}(t)$ is calculated based on an aggregation of the performances of publications that scholar $i$ publishes by age $t$. Denote $\text{m}_{P5}^{i}(t)$ as the evaluation metric of scholar $i$ at age $t$ based on $\text{P}_{c}^{j}(5)$, that is $\text{m}_{P5}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(5)$, where $N(t)$ is the total number of publications of scholar $i$ by age $t$. We illustrated in the paper that P$_c^j(t)$ exhibits high stability over $t$, and hence P$_{c}^{j}(5)$ can be applied to represent the performance of the publication. 
 
-We further demonstrate the robustness of S$_{P5}$ by considering a longer citation history for each publication. Figure \ref{fig:robustness_test_cor} illustrates that m$_{P5}$ is highly correlated with m$_{P10}$ at age $t=1,\cdots,30$, where $\text{m}_{P10}^{ib}$t$= \sum_{j=1}^{N(t)} \text{P}_{c}^{jb}(10)$. We also consider the maximum, mean and median values of $\text{P}_{c}^{jb}(t)$, e.g. $\text{m}_{Pmax}^{ib}$t$= \sum_{j=1}^{N(t)} \max_{t^\prime}\text{P}_{c}^{jb}(t^\prime)$. We see from the figure that these metrics also exhibit high correlations with m$_{P5}$. Furthermore, we perform a Wilcoxon paired signed-rank test to compare the differences between S$_{P5}$ and S$_{P10}$ at each age $t=1,\cdots,30$, and the p-values are close to $1$; indicating that the differences are not statistically significant. Similar conclusions can be drawn for other indicators being considered.
+We further demonstrate the robustness of S$_{P5}$ by considering a longer citation history for each publication. Figure \ref{fig:robustness_test_cor} illustrates that m$_{P5}^{i}(t)$ is highly correlated with m$_{P10}^{i}(t)$ at age $t=1,\cdots,30$, where m$_{P10}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(10)$. We also consider utilizing the maximum, mean and median values of P$_{c}^{j}(t)$, for instance m$_{Pmax}^{i}(t)= \sum_{j=1}^{N(t)} \max_{t^\prime}\text{P}_{c}^{j}(t^\prime)$. We see from Figure \ref{fig:robustness_test_cor} that these metrics also exhibit high correlations with m$_{P5}$. Furthermore, we perform a Wilcoxon paired signed-rank test to compare the differences between S$_{P5}^{i}(t)$ and S$_{P10}^{i}(t)$ at each age $t=1,\cdots,30$, and the p-values are close to $1$; indicating that the differences are not statistically significant. Similar conclusions can be drawn for other indicators being considered.
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/robustness/cor.eps}
-    \caption[Correlation between m$_{P5}$ and other choices of evaluation metric]{Pearson's correlation between m$_{P5}$ and other choices of evaluation metric. Age $10$, max, mean and median correspond to m$_{P10}$, m$_{Pmax}$, m$_{Pmean}$ and m$_{Pmedian}$, respectively. The correlation is calculated at each age $t=1,\cdots,30$.}
+    \caption{{\bf Correlation between m$_{P5}$ and Other Choices of Evaluation Metric.}
+    The benchmark contains all scholars in the dataset. Age $10$, max, mean and median correspond to m$_{P10}$, m$_{Pmax}$, m$_{Pmean}$ and m$_{Pmedian}$, respectively. The correlation is calculated at each age $t=1,\cdots,30$.}
     \label{fig:robustness_test_cor}
 \end{figure}
 
@@ -81,7 +84,8 @@ The test statistics are shown in Figure \ref{fig:stationarity_test}. The dashed 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/stationarity/df_kpss.eps}
-    \caption[Stationarity test of rank percentile series]{Statistical tests for the stationarity of rank percentile series. Both tests are applied on every individual series, and the test statistics are presented. The $5\%$ critical value for each test is illustrated by the dashed horizontal line. Both tests suggest that publication indicator P$_c$ and scholar indicator S$_{P5}$ are non-stationary, while their differenced series are stationary. }
+    \caption{{\bf Statistical Tests for the Stationarity of Rank Percentile Series.}
+    Both tests are applied on every individual series, and the test statistics are presented. The $5\%$ critical value for each test is illustrated by the dashed horizontal line. Both tests suggest that publication indicator P$_c$ and scholar indicator S$_{P5}$ are non-stationary, while their differenced series are stationary. }
     \label{fig:stationarity_test}
 \end{figure}
 
@@ -136,7 +140,7 @@ The details of the predictive models are described below.
           & Dropout rate \\
           & Regularization parameter \\
     \end{tabular}%
-  \caption[Hyperparameter(s) of the machine learning models]{Hyperparameter(s) of the machine learning models.}
+  \caption{{\bf Hyperparameter(s) of the Machine Learning Models.}}
   \label{tab:hyperpara}%
 \end{table}%
 
@@ -148,7 +152,7 @@ The details of the predictive models are described below.
     pub\_cit\_cumulative & total citations of publication $j$ \\
     pub\_cit\_yearly & yearly citations of publication $j$ received in $t_1$ \\
     pub\_cit\_peryear & average citations of publication $j$ over age \\
-    pub\_rp\_cumulative & rank percentile indicator calculated based on total citations, i.e. P$_c^{jb}(t_1)$ \\
+    pub\_rp\_cumulative & rank percentile indicator calculated based on total citations, i.e. P$_c^{j}(t_1)$ \\
     pub\_rp\_yearly & rank percentile indicator calculated based on yearly citations at $t_1$\\
           &  \\
     aut\_cit\_cumulative          & total citations of author $i$ \\
@@ -159,12 +163,12 @@ The details of the predictive models are described below.
     aut\_h\_index & h-index of author $i$  \\
     aut\_g\_index & g-index of author $i$ \\
     aut\_maxcit\_pub & largest citation that a single paper of author $i$ has received \\
-    aut\_rprp5\_cumulative & rank percentile calculated based on all papers, i.e. S$_{P5}^{ib}(t_1)$ \\
+    aut\_rprp5\_cumulative & rank percentile calculated based on all papers, i.e. S$_{P5}^{i}(t_1)$ \\
     aut\_rprp5\_yearly & rank percentile calculated based on just papers written at $t_1$ \\
           &  \\
     *\_delta & the difference over the last two ages for each of the above features \\
     \end{tabular}%
-  \caption[Features for predicting the publication impact]{Features for predicting the impact of publication $j$ of scholar $i$. The features are created at $t_1$.}
+  \caption{{\bf Features for Predicting the Publication Impact.}}
   \label{tab:features_pubrp}%
 \end{table}%
 
@@ -180,7 +184,7 @@ The details of the predictive models are described below.
     aut\_h\_index & h-index of author $i$ \\
     aut\_g\_index & g-index of author $i$ \\
     aut\_cit\_peryear & average citations per age of author $i$ \\
-    aut\_rprp5\_cumulative & rank percentile calculated using all publications, i.e. S$_{P5}^{ib}(t_1)$ \\
+    aut\_rprp5\_cumulative & rank percentile calculated using all publications, i.e. S$_{P5}^{i}(t_1)$ \\
     aut\_rprp5\_yearly & rank percentile calculated using just publications written in age $t_1$ \\
           &  \\
     pub\_cit\_cumulative\_\{min,mean,max\} & citations received by each of the publications \\
@@ -190,7 +194,7 @@ The details of the predictive models are described below.
           &  \\
     *\_delta & the difference over the last two ages for each of the above features \\
     \end{tabular}%
-  \caption[Features for predicting the scholar impact]{Features for predicting the impact of scholar $i$. The features are created at $t_1$.}
+  \caption{{\bf Features for Predicting the Scholar Impact.}}
   \label{tab:features_autrp}%
 \end{table}%
 
@@ -211,7 +215,7 @@ The details of the predictive models are described below.
 \# citations per publication by age 5  & 45    & 56    & 49 \\
 \# citations per scholar by age 5 & 172   & 209   & 332 \\
 \end{tabular}%
-\caption[Summary statistics of the dataset]{Summary statistics of the dataset. }
+\caption{{\bf Summary statistics of the dataset. }}
 \label{tab:exploratory}
 \end{table}
 
@@ -219,14 +223,16 @@ The details of the predictive models are described below.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/exploratory/npub_naut.eps}
-    \caption[Exploratory statistics of the dataset]{\textbf{Left panel}: number of papers published in a certain period; \textbf{right panel}: number of authors who start their careers in a certain period. }
+    \caption{{\bf Exploratory Statistics of the Dataset.}
+    \textbf{Left panel}: number of papers published in a certain period; \textbf{right panel}: number of authors who start their careers in a certain period. }
     \label{fig:exploratory}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/pred_power/scatter_autrp_all.eps}
-    \caption[Kernel density estimation for the scatters of S$_{P5}(t_1)$ and S$_{P5}(t_2)$]{Kernel density estimation for the scatter points of S$_{P5}^{ib}(t_1)$ and S$_{P5}^{ib}(t_2)$. We also fit a simple linear regression of S$_{P5}^{ib}(t_2)$ on S$_{P5}^{ib}(t_1)$. The estimated coefficient and the corresponding standard error (in the parentheses) are displayed in each plot.}
+    \caption{{\bf Kernel Density Estimation for the Scatter Points of S$_{P5}^{i}(t_1)$ and S$_{P5}^{i}(t_2)$.}
+    We fit a simple linear regression of S$_{P5}^{i}(t_2)$ on S$_{P5}^{i}(t_1)$. The estimated coefficient and the corresponding standard error (in the parentheses) are displayed in each plot. The benchmark contains all scholars in the dataset.}
     \label{fig:scatter_autrp_all}
 \end{figure}
 
@@ -234,21 +240,21 @@ The details of the predictive models are described below.
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/pred_model/rmse.eps}
-    \caption[RMSE of the predictive models]{Root mean squared error of the predictive models. The lasso, ridge and elastic net are outperformed by Gamma lasso, and hence are ignored for a better visualization.}
+    \caption{{\bf RMSE for the Predictive Models.}}
     \label{fig:pred_rmse}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/pred_model/medse.eps}
-    \caption[RMESE of the predictive models]{Root median squared error of the predictive models.}
+    \caption{{\bf RMESE for the Predictive Models.}}
     \label{fig:pred_medse}
 \end{figure}
 
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=\textwidth]{figures/pred_model/mae.eps}
-    \caption[MAE of the predictive models]{Mean absolute error of the predictive models.}
+    \caption{{\bf MAE for the Predictive Models.}}
     \label{fig:pred_mae}
 \end{figure}
 
