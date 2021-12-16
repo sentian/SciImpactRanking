@@ -11,7 +11,7 @@
 Sen Tian, Panos Ipeirotis
 \end{center}
 
-\section{Rank Percentile Indicators for Scholars}
+\section{Comparison of Various types of Scholar Percentiles}
 \label{sec:suppl_similarity_autrp}
 
 We consider the benchmark being the field of biology. In order to study the agreement of various indicators, for each indicator, we classify the scholars into four classes, class $1$: $0\le \text{S}_m^{i}(t) < 0.25$, class $2$: $0.25\le \text{S}_m^{i}(t) < 0.5$, class $3$: $0.5 \le \text{S}_m^{i}(t) < 0.75$ and class $4$: $0.75 \le \text{S}_m^{i}(t) \le 1$. An agreement is when two (or three) different indicators belong to the same class. The overall agreement for all three indicators, S$_{P5}$, S$_c$, and S$_h$, is $51\%$ at age $5$ and $68\%$ at age $30$; that is, for about half of the scholars the three indicators agree with each other at age $5$, while that number becomes around two third at age $30$. Figure \ref{fig:aut_rp_class} displays pairwise agreement of the three indicators. We see that the agreement increases with the age. Furthermore, S$_{P5}$ has large agreement with both S$_{c}$ and S$_{h}$, which are $69\%$ and $67\%$, respectively, at age $5$, and $71\%$ and $81\%$, respectively, at age $30$. 
@@ -31,7 +31,7 @@ Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{i}(t_1)$ a
 % publication rank percentile, heat map of correlations
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=\textwidth]{figures/pred_power/suppl_heatmap_cor_current.eps}
+    \includegraphics[width=\textwidth]{figures/pred_power/heatmap_cor_aut_cithindex.eps}
     \caption{{\bf Pearson Correlation between Rank Percentiles at Different Ages.} 
     This supplements the results in Figure \ref{fig:hm_rp_aut}.}
     \label{fig:hm_autrp_current}
@@ -39,12 +39,14 @@ Figure \ref{fig:hm_autrp_current} shows the correlation between S$_c^{i}(t_1)$ a
 
 
 
-\section{Robustness of \texorpdfstring{S$_{P5}$}{Lg}}
-\label{sec:suppl_robustness_P5}
+\section{Evaluation of Publications in Formulating Scholar Percentile}
+\label{sec:suppl_pubrp_sp5}
 
 Recall that S$_{P5}^{i}(t)$ is calculated based on an aggregation of the performances of publications that scholar $i$ publishes by age $t$. Denote $\text{m}_{P5}^{i}(t)$ as the evaluation metric of scholar $i$ at age $t$ based on $\text{P}_{c}^{j}(5)$, that is $\text{m}_{P5}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(5)$, where $N(t)$ is the total number of publications of scholar $i$ by age $t$. We illustrated in the paper that P$_c^j(t)$ exhibits high stability over $t$, and hence P$_{c}^{j}(5)$ can be applied to represent the performance of the publication. 
 
-We further demonstrate the robustness of S$_{P5}$ by considering a longer citation history for each publication. Figure \ref{fig:robustness_test_cor} illustrates that m$_{P5}^{i}(t)$ is highly correlated with m$_{P10}^{i}(t)$ at age $t=1,\cdots,30$, where m$_{P10}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(10)$. We also consider utilizing the maximum, mean and median values of P$_{c}^{j}(t)$, for instance m$_{Pmax}^{i}(t)= \sum_{j=1}^{N(t)} \max_{t^\prime}\text{P}_{c}^{j}(t^\prime)$. We see from Figure \ref{fig:robustness_test_cor} that these metrics also exhibit high correlations with m$_{P5}$. Furthermore, we perform a Wilcoxon paired signed-rank test to compare the differences between S$_{P5}^{i}(t)$ and S$_{P10}^{i}(t)$ at each age $t=1,\cdots,30$, and the p-values are close to $1$; indicating that the differences are not statistically significant. Similar conclusions can be drawn for other indicators being considered.
+We further demonstrate the robustness of S$_{P5}$ by considering a longer citation history for each publication. Figure \ref{fig:robustness_test_cor} illustrates that m$_{P5}^{i}(t)$ is highly correlated with m$_{P10}^{i}(t)$ at age $t=1,\cdots,30$, where m$_{P10}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(10)$. We also consider utilizing the maximum, mean and median values of P$_{c}^{j}(t)$, for instance m$_{Pmax}^{i}(t)= \sum_{j=1}^{N(t)} \max_{t^\prime}\text{P}_{c}^{j}(t^\prime)$. We see from Figure \ref{fig:robustness_test_cor} that these metrics also exhibit high correlations with m$_{P5}$. Furthermore, we perform a Wilcoxon paired signed-rank test to compare the differences between S$_{P5}^{i}(t)$ and S$_{P10}^{i}(t)$ at each age $t=1,\cdots,30$, and the p-values are close to $1$; indicating that the differences are not statistically significant. Similar conclusions can be drawn for other indicators (S$_{Pmax}$, S$_{Pmean}$, and S$_{Pmedian}$) being considered.
+
+
 
 \begin{figure}[ht!]
     \centering
@@ -54,6 +56,53 @@ We further demonstrate the robustness of S$_{P5}$ by considering a longer citati
     \label{fig:robustness_test_cor}
 \end{figure}
 
+
+\section{Aggregation Function in Formulating Scholar Percentile}
+\label{sec:suppl_aggfun}
+
+We use sum as the aggregation function in calculating the scholar percentile, that is $\text{m}_{P5}^{i}(t)= \sum_{j=1}^{N(t)} \text{P}_{c}^{j}(5)$. Another favorable choice is median, i.e. $\text{m}_{P5}^{i}(t) = \text{median}_{j}\text{P}_{c}^{j}(5)$. We provide empirical evidence of the advantage of utilizing sum over median. We use S$_{P5.sum}$ and S$_{P5.median}$ to denote the rank percentiles formulated based on the sum and median publication impacts, respectively.
+
+The first reason that we prefer sum over median is that S$_{P5.sum}$ is stationary while S$_{P5.median}$ is not. Stationarity provides the foundation for the study in this manuscript. Without stationarity, the comparison of the 6-year performance of the candidate and the 6-year performance of the senior cohorts in the example of the tenure promotion will not be valid, due to the presence of systematic bias. We see in Figure \ref{fig:rp_stationarity} that S$_{P5.sum}$ is approximately stationary. However, as indicated in Figure \ref{fig:rp_stationarity_median}, S$_{P5.median}$ exhibits a clear upward trend and favors the junior scholars. 
+
+The second reason is that using sum takes both the quality and quantity of publications into account. This is in the same spirit as citation counts and h-index, the two most commonly used bibliographic metrics. However, using median largely minimizes the effect of quantity. A scholar who participates in only a small number of high-impact projects, e.g. PhD student, can rank higher than a scholar who consistently produces impactful publications. In Figure \ref{fig:simulated_authors}, the artificial scholar B only publishes one highly regarded article throughout the entire career. We see that S$_{P5.sum}$ ranks the scholar in the top $25\%$, and the rank dies down to be in the bottom $10\%$ at age 10. The same pattern can be observed for S$_{c}$ and S$_{h}$ (rank percentiles based on citations and h-index, respectively). A corresponding plot using S$_{P5.median}$ is displayed in Figure \ref{fig:simulated_authors_median}, where the scholar has a constant rank close to 1 throughout the career. It is not unreasonable to question that the scholar is still on top 20 years after the single publication, and therefore, the sum is preferred in this example.
+
+Another example in Figure \ref{fig:simulated_authors} is the artificial scholar A who publishes a substantial number of low-impact publications throughout the career. We observe that S$_{P5.sum}$ starts from around $10\%$ and gradually dies down to around $5\%$ at age 10. This indicates that flooding low-impact publications may slightly works at the beginning of the career, and it is not a good strategy in the long run. The pattern arguably makes more sense than the constant S$_{P5.median}$ as displayed in Figure \ref{fig:simulated_authors_median}. Furthermore, S$_{P5.sum}$ is almost always below S$_{c}$ and S$_{h}$; indicating that it is more robust against flooding low-impact works. 
+
+The last and arguably most important reason that we prefer sum is that the predictive power of S$_{P5.sum}$ is much higher than S$_{P5.median}$. If we compare Figure \ref{fig:hm_rp_aut} with \ref{fig:hm_rp_aut_median}, the overall correlation drops by around $5\%$. The correlation drops by about $50\%$ for predicting the future impact of future works, as revealed in Figure \ref{fig:hm_rp_aut_future} and \ref{fig:hm_rp_aut_future_median}.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/stationarity/rp_stationarity_median.eps}
+    \caption{{\bf S$_{P5}^i(5)$ Grouped by the Starting Years of Academic Careers.}
+    The benchmark is the tenured professors. The aggregation function in formulating S$_{P5}^i(5)$ is median.} 
+    \label{fig:rp_stationarity_median}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/compare_autrp/simulated_authors_median.eps}
+    \caption{{\bf The Rank Percentile Indicators for Three Artificial Scholars.} The benchmark contains scholars in biology who started their careers in $1990$. The aggregation function in formulating S$_{P5}^i(5)$ is median.}
+    \label{fig:simulated_authors_median}
+\end{figure}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+             \includegraphics[width=\textwidth]{figures/pred_power/heatmap_cor_aut_median.eps}
+         \caption{Correlation between S$_{P5}^{i}(t_1)$ and S$_{P5}^{i}(t_2)$}
+         \label{fig:hm_rp_aut_median}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+             \includegraphics[width=\textwidth]{figures/pred_power/heatmap_cor_aut_future_median.eps}
+         \caption{Correlation between S$_{P5}^{i}(t_1)$ and S$_{P5}^{i}(t_2 | t_1)$}
+         \label{fig:hm_rp_aut_future_median}
+    \end{subfigure}
+    \caption{{\bf Pearson Correlation between Rank Percentiles at Different Ages.} The benchmark is either all or biology, and it is specified in each of the subfigures. The aggregation function in formulating S$_{P5}^i(5)$ is median.}
+    \label{fig:hm_rp_median}
+\end{figure}
 
 \iffalse
 \begin{equation}
@@ -73,7 +122,7 @@ We take the maximum performance for each of the $N$ papers, and sum them:
 \end{equation}
 \fi
 
-\section{Stationarity test}
+\section{Stationarity Test for Rank Percentiles and Their Differenced Series}
 \label{sec:suppl_stationarity}
 
 Two commonly used statistical tests for stationarity are the Dicky-Fuller test~\cite{dickey1979distribution} and KPSS test~\cite{kwiatkowski1992testing}. These two tests formulate the hypothesis testing problems differently. Dicky-Fuller test assumes a unit root presented in the series. A unit root means that the series is $I(1)$, i.e. integrated order $1$ and the first differenced series is stationary. The more negative the test statistic is, the stronger the rejection of the null. On the other hand, KPSS test assumes the null as the series being stationary, i.e. $I(0)$. KPSS test is slightly more general since it allows testing a series being non-stationary but does not present a unit root. The more positive the test statistic is, the stronger the rejection of the null. Both tests include the drift in the test equations but exclude the trend, since we do not observe significant trends in the series. 

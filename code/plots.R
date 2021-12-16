@@ -4,11 +4,12 @@
 
 ## base directories
 setwd('SciImpactRanking/')
-base = getwd() 
-base_fig = paste(base, '/paper/figures', sep='') # for the figure outputs
+base = getwd()
+base_fig = paste0(base, '/paper/figures') # for the figure outputs
 
 ## source the R packages and functions, required for the code below
 source(paste0(base, '/code/utils.R'))
+setDTthreads(4) # change the number of threads for data.table based on your system
 
 ## read data
 # rank percntiles for publications and scholars
@@ -17,7 +18,7 @@ DT_aut = readRDS(paste0(base, '/data/rp/aut.rds'))
 DT_aut_future = readRDS(paste0(base, '/data/rp/aut_future.rds'))
 
 ### Figure 1: RP of a random scholar --------
-plot.scholar.rp.auti <- function(id, DT_aut, benchmark){
+plot.scholar.rp.auti <- function(id, DT_aut, benchmark, file_path){
   n = nrow(DT_aut[aut.id == id])
   data_toplot = data.frame(rp = as.vector(as.matrix(DT_aut[aut.id == id, paste0(c('S.c.', 'S.h.', 'S.P5.'), benchmark), with=FALSE])),
                            type = rep(c('S.c', 'S.h', 'S.P5'), each = n),
@@ -46,7 +47,7 @@ plot.scholar.rp.auti <- function(id, DT_aut, benchmark){
   p1 = p1 + theme(axis.text=element_text(size=15), axis.title=element_text(size=15))
   
   setEPS()
-  postscript(file=paste(base_fig, '/compare_autrp/auti.eps',sep=""), height=4, width=6)
+  postscript(file=paste0(base_fig, file_path), height=4, width=6)
   print(p1)
   dev.off()
 }
@@ -54,15 +55,14 @@ plot.scholar.rp.auti <- function(id, DT_aut, benchmark){
 # authors = read.csv(paste0(base, '/data/raw/authors.csv'), stringsAsFactors = FALSE)
 # id_leskovec = authors$aut.id[ which(grepl('Leskovec', authors$name)) ]
 id_auti = 545 # id of a random author
-plot.scholar.rp.auti(id_auti, DT_aut, 'tenured')
-
+plot.scholar.rp.auti(id_auti, DT_aut, 'tenured', file_path = '/compare_autrp/auti.eps')
 
 ### Figure 2: three synthetic academic careers to illustrate different scholar RP --------
 ## generate the synthetic careers
 gen.career <- function(DT_pub, DT_aut){
   ## take scholars who start their careers in 1990 and are in biology
   autid_bio1990 = DT_aut[start == 1990 & !is.na(S.c.bio)]$aut.id
-  DT_pub_bio1990 = DT_pub[aut.id %in% autid_bio1990]
+  DT_pub_bio1990 = DT_pub[aut.id %in% autid_bio1990 & year<=2012]
   DT_pub_bio1990[, c('P.c.all', 'P.c.bio', 'P.c.tenured')] = NULL
   DT_aut_bio1990 = DT_aut[aut.id %in% autid_bio1990]
   DT_aut_bio1990[, `:=`(publications = c(cum.publications[1], diff(cum.publications)) ), by='aut.id']
@@ -75,12 +75,12 @@ gen.career <- function(DT_pub, DT_aut){
   DT_pub_autA = data.table()
   set.seed(66)
   count = 0
-  for(i in 1:27){
+  for(i in 1:23){
     for(j in 1:npub_autA[i]){
       count = count + 1
       q = runif(1, min=0, max=0.1)
       DT_tmp = DT_pub_bio1990[start == 1990+i-1, list(citations = round(quantile(citations, q))), by='age']
-      DT_tmp[, `:=`(pub.id = -count, aut.id = -1, start = 1990+i-1, year = (1990+i-1):2016, cum.citations=cumsum(citations))]
+      DT_tmp[, `:=`(pub.id = -count, aut.id = -1, start = 1990+i-1, year = (1990+i-1):2012, cum.citations=cumsum(citations))]
       DT_pub_autA = rbind(DT_pub_autA, DT_tmp)
     }
   }
@@ -88,28 +88,26 @@ gen.career <- function(DT_pub, DT_aut){
   # Author B publishes one highly cited paper throughout the entire career
   q = 0.999
   DT_pub_autB = DT_pub_bio1990[start == 1990, list(citations = round(quantile(citations, q))), by='age']
-  DT_pub_autB[, `:=`(pub.id = -sum(npub_autA)-1, aut.id = -2, start = 1990, year = 1990:2016, cum.citations=cumsum(citations))]
+  DT_pub_autB[, `:=`(pub.id = -sum(npub_autA)-1, aut.id = -2, start = 1990, year = 1990:2012, cum.citations=cumsum(citations))]
   
   # Author C publishes one medium-impact paper throughout the entire career
   q = 0.4
   DT_pub_autC = DT_pub_bio1990[start == 1990, list(citations = round(quantile(citations, q))), by='age']
-  DT_pub_autC[, `:=`(pub.id = -sum(npub_autA)-2, aut.id = -3, start = 1990, year = 1990:2016, cum.citations=cumsum(citations))]
+  DT_pub_autC[, `:=`(pub.id = -sum(npub_autA)-2, aut.id = -3, start = 1990, year = 1990:2012, cum.citations=cumsum(citations))]
   
   ## merge and calculate scholar rank percentiles
   DT_pub_bio1990 = rbind(DT_pub_bio1990, DT_pub_autA, DT_pub_autB, DT_pub_autC)
   DT_pub_bio1990[, `:=`(P.c.bio = perc.rank(cum.citations), P.c.all=NA, P.c.tenured=NA), by='age']
-  DT_tmp = do.call(rbind, mapply(calc.metrics.auti, unique(DT_pub_bio1990$aut.id), MoreArgs = list(DT_pub_bio1990), SIMPLIFY = FALSE, USE.NAMES = FALSE))
-  ## calculate rank percentiles
-  DT_tmp = calc.rp.aut(DT_tmp)
-  DT_syn_aut = DT_tmp[aut.id < 0]
-  return(DT_syn_aut)
+  return(DT_pub_bio1990)
 }
-DT_syn_aut = gen.career(DT_pub, DT_aut)
+DT_syn_pub = gen.career(DT_pub, DT_aut)
+DT_syn_aut = calc.autrp(DT_syn_pub)
+DT_syn_aut = DT_syn_aut[aut.id < 0]
 
 ## make the plot
-plot.simulated.authors <- function(DT_syn_aut){
+plot.simulated.authors <- function(DT_syn_aut, file_path){
   benchmark = 'bio'
-  auts = c('author A', 'author B', 'author C')
+  auts = c('scholar A', 'scholar B', 'scholar C')
   metrics = c('S.c','S.h','S.P5')
   data_toplot = data.frame()
   for(i in 1:length(metrics)){
@@ -150,15 +148,14 @@ plot.simulated.authors <- function(DT_syn_aut){
   p1 = p1 + theme(plot.title = element_text(size = 35, face = "bold", hjust=0.5), axis.text=element_text(size=25), axis.title=element_text(size=25))
   
   setEPS()
-  postscript(file=paste(base_fig, '/compare_autrp/simulated_authors.eps',sep=""), height=7, width=15)
+  postscript(file=paste0(base_fig, file_path), height=7, width=15)
   print(p1)
   dev.off()
 }
-plot.simulated.authors(DT_syn_aut)
-
+plot.simulated.authors(DT_syn_aut, file_path = '/compare_autrp/simulated_authors.eps')
 
 ### Figure 3: Stationarity of scholar RP --------
-plot.stationarity.tenured <- function(DT_pub, DT_aut, age.fix=10, chop.percent=1){
+plot.stationarity.tenured <- function(DT_pub, DT_aut, file_path, age.fix=5, chop.percent=1){
   make.plot <- function(data_toplot, chop.percent, x.label, y.label, title){
     names(data_toplot)[2] = 'metric'
     data_toplot$start = factor(data_toplot$start)
@@ -176,25 +173,25 @@ plot.stationarity.tenured <- function(DT_pub, DT_aut, age.fix=10, chop.percent=1
                     axis.text=element_text(size=20), axis.title=element_text(size=20))
     p1
   }
-
+  
   pp = make.plot(DT_aut[age == age.fix & start >= 1980 & !is.na(S.P5.tenured), c('start', 'S.P5.tenured')], 
                  chop.percent=chop.percent,
                  x.label = 'starting year of careers', 
-                 y.label = bquote('rank percentiles at age 10,'~S[P5]^i~(10)), 
+                 y.label = bquote(.(paste0('rank percentiles at age ', age.fix, ','))~S[P5]^i~(.(age.fix))), 
                  title = '')
   
   # print to file
   setEPS()
-  postscript(file=paste0(base_fig, '/stationarity/rp_stationarity.eps'), height=6, width=9)
+  postscript(file=paste0(base_fig, file_path), height=6, width=9)
   print(pp)
   dev.off()
 }
-plot.stationarity.tenured(DT_pub, DT_aut)
+plot.stationarity.tenured(DT_pub, DT_aut, age.fix=5, file_path = '/stationarity/rp_stationarity.eps')
 ### Figure 4 & 5: long-term predictability of publication citations and RP --------
-plot.predictability.cit.rp <- function(DT_pub, width = 10, height = 8, label.size = 16){
+plot.predictability.cit.rp <- function(DT_pub, file_dir, width = 10, height = 8, label.size = 16){
   make.plot <- function(p1, file.name){
     p1 = p1 + theme(plot.title = element_text(size = 25, face = "bold", hjust=0.5), axis.text=element_text(size=label.size), axis.title=element_text(size=25))
-    cairo_ps(filename = paste0(base_fig, '/pred_power/', file.name, '.eps'),
+    cairo_ps(filename = paste0(base_fig, file_dir, file.name, '.eps'),
              width = width, height = height, fallback_resolution = 300)
     print(p1)
     dev.off()
@@ -255,11 +252,11 @@ plot.predictability.cit.rp <- function(DT_pub, width = 10, height = 8, label.siz
   p1 = p1 + ylab(label = bquote('average rank percentiles at age 5,' ~ P[c]^j~(5)))
   make.plot(p1, 'rp_rp')
 }
-plot.predictability.cit.rp(DT_pub)
+plot.predictability.cit.rp(DT_pub, file_dir = '/pred_power/')
 
 ### Figure 6 & S2: Pearson correlation between RP at two different ages --------
 ## heatmap for the predictibility of RP, e.g. correlation between RP at age t1 and RP at age t2
-plot.heatmap <- function(rp, types, future=FALSE, which.metric = 'cor', height=18, width=18, fill.min=NULL, filename){
+plot.heatmap <- function(rp, types, file_path, future=FALSE, which.metric = 'cor', height=18, width=18, fill.min=NULL){
   pred = seq(5,25,by=5)
   true = seq(10,30,by=5)
   
@@ -321,7 +318,7 @@ plot.heatmap <- function(rp, types, future=FALSE, which.metric = 'cor', height=1
   
   # write to file
   setEPS()
-  postscript(file=paste0(base_fig, '/pred_power/', filename, '.eps'), height=height, width=width)
+  postscript(file=paste0(base_fig, file_path), height=height, width=width)
   print(p1)
   dev.off()
 }
@@ -331,16 +328,16 @@ types = c("'benchmark: all'",
 # Figure 6a
 rp = list(DT_pub[, c('pub.id', 'age', 'P.c.all')], 
           DT_pub[!is.na(P.c.bio), c('pub.id', 'age', 'P.c.bio')] )
-plot.heatmap(rp, types, fill.min=0.38, height=9, filename = 'heatmap_cor_pub') 
+plot.heatmap(rp, types, fill.min=0, height=9, file_path = '/pred_power/heatmap_cor_pub.eps') 
 # Figure 6b
 rp = list(DT_aut[, c('aut.id', 'age', 'S.P5.all')], 
           DT_aut[!is.na(S.P5.bio), c('aut.id', 'age', 'S.P5.bio')] )
-plot.heatmap(rp, types, fill.min=0.38, height=9, filename = 'heatmap_cor_aut') 
+plot.heatmap(rp, types, fill.min=0, height=9, file_path = '/pred_power/heatmap_cor_aut.eps') 
 
 # Figure 6c
 rp = list(lapply(DT_aut_future, function(x){x[, c('aut.id', 'age', 'S.P5.all')]}),
           lapply(DT_aut_future, function(x){x[!is.na(S.P5.bio), c('aut.id', 'age', 'S.P5.bio')]}))
-plot.heatmap(rp, types, future=TRUE, fill.min=0.38, height=9, filename = 'heatmap_cor_aut_future') 
+plot.heatmap(rp, types, future=TRUE, fill.min=0, height=9, file_path = '/pred_power/heatmap_cor_aut_future.eps') 
 
 # Figure S2
 types = c("S[c] ~ ', benchmark: all'",
@@ -352,11 +349,11 @@ rp = list(DT_aut[, c('aut.id', 'age', 'S.c.all')],
           DT_aut[!is.na(S.c.bio), c('aut.id', 'age', 'S.c.bio')],
           DT_aut[, c('aut.id', 'age', 'S.h.all')], 
           DT_aut[!is.na(S.h.bio), c('aut.id', 'age', 'S.h.bio')])
-plot.heatmap(rp, types, fill.min=0.38, filename = 'suppl_heatmap_cor_current') 
+plot.heatmap(rp, types, fill.min=0, file_path = '/pred_power/heatmap_cor_aut_cithindex.eps') 
 
 
 ### Figure 7 & S6: kernel density plot of scatter points for rank percentiles --------
-plot.scatter <- function(DT, puboraut, filename, specify.bandwidth=FALSE){
+plot.scatter <- function(DT, puboraut, file_path, specify.bandwidth=FALSE){
   tau1 = seq(5,25,by=5)
   tau2 = seq(10,30,by=5)
   data_toplot = list()
@@ -432,16 +429,16 @@ plot.scatter <- function(DT, puboraut, filename, specify.bandwidth=FALSE){
   p1 = p1 + theme( axis.text=element_text(size=15), axis.title=element_text(size=25))
   
   setEPS()
-  postscript(file=paste(base_fig,'/pred_power/',filename,'.eps',sep=""), height=15, width=18)
+  postscript(file=paste0(base_fig, file_path), height=15, width=18)
   print(p1)
   dev.off()
 }
-plot.scatter(DT_pub, 'pub', 'scatter_pubrp_bio1980')
-plot.scatter(DT_aut, 'aut', 'scatter_autrp_all', TRUE)
+plot.scatter(DT_pub, 'pub', file_path = '/pred_power/scatter_pubrp_bio1980.eps')
+plot.scatter(DT_aut, 'aut', file_path = '/pred_power/scatter_autrp_all.eps', TRUE)
 
 
 ### Figure 8 & S7-S9: testing errors (R^2, MAE, RMSE, RMEDSE) of the predictive models --------
-plot.errors <- function(errors, which_error){
+plot.errors <- function(errors, which_error, file_dir){
   age_training = seq(5,25,by=5)
   values = methods = tau1 = metric = pred_age = c()
   metric_names = c("'cumulative paper impact'", "'cumulative scholar impact'", "'future scholar impact'")
@@ -490,13 +487,13 @@ plot.errors <- function(errors, which_error){
   p1 = p1 + theme(legend.text = element_text(size = 30), legend.title = element_blank())
   p1 = p1 + theme(strip.text.x = element_text(size = 25), strip.text.y = element_text(size = 25))
   setEPS()
-  postscript(file=paste(base_fig,'/pred_model/',which_error,'.eps',sep=""), height=20, width=18)
+  postscript(file=paste0(base_fig, file_dir, which_error,'.eps'), height=20, width=18)
   print(p1)
   dev.off()
 }
 errors = readRDS(paste0(base,'/results/errors.rds'))
 for(which_error in names(errors$P.c$`5`)){
-  plot.errors(errors, which_error)
+  plot.errors(errors, which_error, file_dir = '/pred_model/')
 }
 
 ### Figure S1: classification of different types of scholar RP --------
@@ -534,7 +531,7 @@ result = list()
 result[['age: 5']] = classes.pivot(DT_aut, 5, 'bio')
 result[['age: 30']] = classes.pivot(DT_aut, 30, 'bio')
 
-heatmap.class.agreement <- function(result){
+heatmap.class.agreement <- function(result, file_path){
   agreement = lapply(result, function(x){round(100*unlist(lapply(x, function(y){sum(diag(y))} )))})
   name.to.expression <- function(type_name){
     if(type_name == 'S.c'){
@@ -548,7 +545,7 @@ heatmap.class.agreement <- function(result){
       "S'[P5]"
     }
   }
-
+  
   data_toplot = data.frame()
   for(j in 1:length(result[[1]])){
     for(age_name in names(result)){
@@ -575,11 +572,11 @@ heatmap.class.agreement <- function(result){
   p1 = p1 + theme(plot.title = element_text(size = 35, hjust=0.5), axis.text=element_text(size=25), axis.title=element_text(size=35))
   
   setEPS()
-  postscript(file=paste(base_fig, '/compare_autrp/heatmap_class_agreement.eps',sep=""), height=25, width=18)
+  postscript(file=paste0(base_fig, file_path), height=25, width=18)
   print(p1)
   dev.off()
 }
-heatmap.class.agreement(result)
+heatmap.class.agreement(result, file_path = '/compare_autrp/heatmap_class_agreement.eps')
 
 
 ### Figure S3: Pearson correlation between m.P5 and other evaluation metrics --------
@@ -624,47 +621,57 @@ calc.metrics.rp.auti <- function(aut.i.id, DT_pub){
   DT_metrics[, `:=`(age = 1:.N, aut.id = aut.i.id)]
   return(DT_metrics)
 }
-DT_tmp = do.call(rbind, mapply(calc.metrics.rp.auti, unique(DT_pub$aut.id), MoreArgs = list(DT_pub), SIMPLIFY = FALSE, USE.NAMES = FALSE))
-
-# calculate the correlation at each age for the evaluation metrics (m_it)
-correlations = DT_tmp[,lapply(.SD, function(x){cor(x, P5)}), by='age',.SDcols=c('mean', 'max', 'median', 'P10')]
-data_toplot = data.frame(values = unlist(correlations[1:30,2:5]), 
-                         age = rep(1:30, 4),
-                         type = rep(c('mean', 'max', 'median', 'age10'), each=30)) 
-data_toplot$type = factor( data_toplot$type )
-p1 = ggplot(data=data_toplot, aes(x=type, y=values)) + geom_boxplot()
-p1 = p1 + xlab('') + ylab('')
-p1 = p1 + theme(axis.text=element_text(size=25))
-setEPS()
-postscript(file=paste(base_fig,'/robustness/cor.eps',sep=""), height=6, width=10)
-print(p1)
-dev.off()
+calc.metrics.rp <- function(DT_pub){
+  DT_tmp = do.call(rbind, mapply(calc.metrics.rp.auti, unique(DT_pub$aut.id), MoreArgs = list(DT_pub), SIMPLIFY = FALSE, USE.NAMES = FALSE))
+  return(DT_tmp)
+}
+DT_metrics_rp = calc.metrics.rp(DT_pub)
+## plot the correlations
+plot.cor.metrics.rp <- function(DT_metrics_rp, file_path){
+  # calculate the correlation at each age for the evaluation metrics (m_it)
+  correlations = DT_tmp[,lapply(.SD, function(x){cor(x, P5)}), by='age',.SDcols=c('mean', 'max', 'median', 'P10')]
+  data_toplot = data.frame(values = unlist(correlations[1:30,2:5]), 
+                           age = rep(1:30, 4),
+                           type = rep(c('mean', 'max', 'median', 'age10'), each=30)) 
+  data_toplot$type = factor( data_toplot$type )
+  p1 = ggplot(data=data_toplot, aes(x=type, y=values)) + geom_boxplot()
+  p1 = p1 + xlab('') + ylab('')
+  p1 = p1 + theme(axis.text=element_text(size=25))
+  setEPS()
+  postscript(file=paste0(base_fig, file_path), height=6, width=10)
+  print(p1)
+  dev.off()
+}
+plot.cor.metrics.rp(DT_metrics_rp, file_path = '/robustness/cor.eps')
 ### Figure S4: Stationarity test for the RP series --------
-## take a subset of the publications or scholars that have no more than age 30
-## calculate the differenced series
-DT_pub_1980s = DT_pub[!is.na(P.c.bio) & start %in% seq(1980,1987) & age<=30]
-DT_pub_1980s[, `:=`(P.c.bio.diff = c(NA, diff(P.c.bio)) ), by='pub.id']
-DT_aut_1980s = DT_aut[!is.na(S.P5.bio) & start %in% seq(1980,1987) & age<=30]
-DT_aut_1980s[, `:=`(S.P5.bio.diff = c(NA, diff(S.P5.bio)) ), by='aut.id']
+calc.stationarity.teststat <- function(DT_pub, DT_aut){
+  ## take a subset of the publications or scholars that have no more than age 30
+  ## calculate the differenced series
+  DT_pub_1980s = DT_pub[!is.na(P.c.bio) & start %in% seq(1980,1987) & age<=30]
+  DT_pub_1980s[, `:=`(P.c.bio.diff = c(NA, diff(P.c.bio)) ), by='pub.id']
+  DT_aut_1980s = DT_aut[!is.na(S.P5.bio) & start %in% seq(1980,1987) & age<=30]
+  DT_aut_1980s[, `:=`(S.P5.bio.diff = c(NA, diff(S.P5.bio)) ), by='aut.id']
+  
+  ## calculate the test statistics
+  DT_pub_teststat = DT_pub_1980s[, list(df = ur.df(P.c.bio, type='drift', lags=0)@teststat[1,'tau2'],
+                                        df.diff = ur.df(P.c.bio.diff[!is.na(P.c.bio.diff)], type='drift', lags=0)@teststat[1,'tau2'],
+                                        kpss = kpss.test(P.c.bio, null = 'Level')$statistic,
+                                        kpss.diff = kpss.test(P.c.bio.diff[!is.na(P.c.bio.diff)], null = 'Level')$statistic), 
+                                 by='pub.id']
+  DT_pub_teststat$pub.id = NULL
+  
+  DT_aut_teststat = DT_aut_1980s[, list(df = ur.df(S.P5.bio, type='drift', lags=0)@teststat[1,'tau2'],
+                                        df.diff = ur.df(S.P5.bio.diff[!is.na(S.P5.bio.diff)], type='drift', lags=0)@teststat[1,'tau2'],
+                                        kpss = kpss.test(S.P5.bio, null = 'Level')$statistic,
+                                        kpss.diff = kpss.test(S.P5.bio.diff[!is.na(S.P5.bio.diff)], null = 'Level')$statistic), 
+                                 by='aut.id']
+  DT_aut_teststat$aut.id = NULL
+  return(list(pub=DT_pub_teststat, aut=DT_aut_teststat))
+}
+DT_teststat = calc.stationarity.teststat(DT_pub, DT_aut)
 
-## calculate the test statistics
-DT_pub_teststat = DT_pub_1980s[, list(df = ur.df(P.c.bio, type='drift', lags=0)@teststat[1,'tau2'],
-                                      df.diff = ur.df(P.c.bio.diff[!is.na(P.c.bio.diff)], type='drift', lags=0)@teststat[1,'tau2'],
-                                      kpss = kpss.test(P.c.bio, null = 'Level')$statistic,
-                                      kpss.diff = kpss.test(P.c.bio.diff[!is.na(P.c.bio.diff)], null = 'Level')$statistic), 
-                               by='pub.id']
-DT_pub_teststat$pub.id = NULL
-
-DT_aut_teststat = DT_aut_1980s[, list(df = ur.df(S.P5.bio, type='drift', lags=0)@teststat[1,'tau2'],
-                                      df.diff = ur.df(S.P5.bio.diff[!is.na(S.P5.bio.diff)], type='drift', lags=0)@teststat[1,'tau2'],
-                                      kpss = kpss.test(S.P5.bio, null = 'Level')$statistic,
-                                      kpss.diff = kpss.test(S.P5.bio.diff[!is.na(S.P5.bio.diff)], null = 'Level')$statistic), 
-                               by='aut.id']
-DT_aut_teststat$aut.id = NULL
-# critical values for both tests at 5% significance level
-testcritical = c(adf = -2.93, kpss = 0.463)
 # function to plot test statistics with critical values
-plot.teststat <- function(DT_pub_teststat, DT_aut_teststat, testcritical, plot.name){
+plot.teststat <- function(DT_pub_teststat, DT_aut_teststat, testcritical, file_path){
   n_pub = nrow(DT_pub_teststat)
   n_aut = nrow(DT_aut_teststat)
   data_toplot = data.frame(
@@ -698,11 +705,13 @@ plot.teststat <- function(DT_pub_teststat, DT_aut_teststat, testcritical, plot.n
   p1 = p1 + theme(plot.title = element_text(size = 25, face = "bold", hjust=0.5), axis.text=element_text(size=20), axis.title=element_text(size=30,face="bold"))
   p1 = p1 + theme(strip.text.x = element_text(size = 25))
   setEPS()
-  postscript(file=paste(base_fig,'/stationarity/',plot.name,'.eps',sep=""), height=8, width=15)
+  postscript(file=paste0(base_fig, file_path), height=8, width=15)
   print(p1)
   dev.off()
 }
-plot.teststat(DT_pub_teststat, DT_aut_teststat, testcritical, 'drift')
+# critical values for both tests at 5% significance level
+testcritical = c(adf = -2.93, kpss = 0.463)
+plot.teststat(DT_teststat$pub, DT_teststat$aut, testcritical, file_path = '/stationarity/df_kpss.eps')
 
 
 
@@ -722,7 +731,7 @@ n.group <- function(DT, type, benchmark){
   return(DT_tmp)
 }
 
-plot.exploratory <- function(DT_pub, DT_aut){
+plot.exploratory <- function(DT_pub, DT_aut, file_path){
   make.plot <- function(data_toplot, title, type){
     p1 = ggplot(data=data_toplot, aes(x=group, y=N, fill=factor(benchmark, levels=c('tenured', 'biology', 'all')))) 
     p1 = p1 + geom_bar(stat="identity", position=position_dodge()) 
@@ -758,11 +767,11 @@ plot.exploratory <- function(DT_pub, DT_aut){
   pp = list()
   pp[['npub']] = make.plot(npub_group, '# publications', 'npub')
   pp[['naut']] = make.plot(naut_group, '# scholars (starting years of career)', 'naut')
-
+  
   mylegend = g_legend(pp$npub)
   
   setEPS()
-  postscript(file=paste(base_fig, '/exploratory/npub_naut.eps',sep=""), height=8, width=12)
+  postscript(file=paste0(base_fig, file_path), height=8, width=12)
   pp0 <- grid.arrange(arrangeGrob(pp$npub+ theme(legend.position="none"),
                                   pp$naut+ theme(legend.position="none"),
                                   nrow=1,ncol=2,heights=rep(5,1)),
@@ -770,20 +779,58 @@ plot.exploratory <- function(DT_pub, DT_aut){
   print(pp0)
   dev.off()
 }
-plot.exploratory(DT_pub, DT_aut)
+plot.exploratory(DT_pub, DT_aut, file_path = '/exploratory/npub_naut.eps')
 
 ### Table S4: exploratory info of the dataset --------
-for(benchmark in c('all', 'bio', 'tenured')){
-  pub_id_benchmark = unique( DT_pub[which(!is.na(DT_pub[, paste0('P.c.', benchmark), with=FALSE]))]$pub.id )
-  aut_id_benchmark = unique( DT_aut[which(!is.na(DT_aut[, paste0('S.c.', benchmark), with=FALSE]))]$aut.id )
-  print( paste0( "Benchmark ", benchmark, ", # pulications: ", 
-                 length(pub_id_benchmark)  ))
-  print( paste0( "Benchmark ", benchmark, ", # scholars: ", 
-                 length(aut_id_benchmark)  ))
-  print( paste0( "Benchmark ", benchmark, ", # citations per publication by age 5: ",
-         round(mean( DT_pub[age == 5 & pub.id %in% pub_id_benchmark, ]$cum.citations ))))
-  print( paste0( "Benchmark ", benchmark, ", # citations per scholar by age 5: ",
-         round(mean( DT_aut[age == 5 & aut.id %in% aut_id_benchmark, ]$cum.citations ))))
+print.exploratory.info <- function(DT_pub, DT_aut){
+  for(benchmark in c('all', 'bio', 'tenured')){
+    pub_id_benchmark = unique( DT_pub[which(!is.na(DT_pub[, paste0('P.c.', benchmark), with=FALSE]))]$pub.id )
+    aut_id_benchmark = unique( DT_aut[which(!is.na(DT_aut[, paste0('S.c.', benchmark), with=FALSE]))]$aut.id )
+    print( paste0( "Benchmark ", benchmark, ", # pulications: ", 
+                   length(pub_id_benchmark)  ))
+    print( paste0( "Benchmark ", benchmark, ", # scholars: ", 
+                   length(aut_id_benchmark)  ))
+    print( paste0( "Benchmark ", benchmark, ", # citations per publication by age 5: ",
+                   round(mean( DT_pub[age == 5 & pub.id %in% pub_id_benchmark, ]$cum.citations ))))
+    print( paste0( "Benchmark ", benchmark, ", # citations per scholar by age 5: ",
+                   round(mean( DT_aut[age == 5 & aut.id %in% aut_id_benchmark, ]$cum.citations ))))
+  }
 }
+print.exploratory.info(DT_pub, DT_aut)
 
 
+
+
+### Figure S4, S5 & S6: use median publication impact to formulate scholar rank percentile --------
+# read data
+DT_aut_median = readRDS(paste0(base, '/data/rp/aut_median.rds'))
+DT_aut_future_median = readRDS(paste0(base, '/data/rp/aut_future_median.rds'))
+# Figure S4
+plot.stationarity.tenured(DT_pub, DT_aut_median, age.fix=5, file_path = '/stationarity/rp_stationarity_median.eps')
+
+# Figure S5
+# generate artificial scholars
+DT_syn_pub = gen.career(DT_pub, DT_aut)
+DT_syn_aut_median = calc.autrp(DT_syn_pub, fun.agg = median)
+DT_syn_aut_median = DT_syn_aut_median[aut.id < 0]
+plot.simulated.authors(DT_syn_aut_median, file_path = '/compare_autrp/simulated_authors_median.eps')
+
+# Figure S6a
+types = c("'benchmark: all'",
+          "'benchmark: biology'")
+rp = list(DT_aut_median[, c('aut.id', 'age', 'S.P5.all')], 
+          DT_aut_median[!is.na(S.P5.bio), c('aut.id', 'age', 'S.P5.bio')] )
+plot.heatmap(rp, types, fill.min=0, height=9, file_path = '/pred_power/heatmap_cor_aut_median.eps') 
+
+# Figure S6b
+rp = list(lapply(DT_aut_future_median, function(x){x[, c('aut.id', 'age', 'S.P5.all')]}),
+          lapply(DT_aut_future_median, function(x){x[!is.na(S.P5.bio), c('aut.id', 'age', 'S.P5.bio')]}))
+plot.heatmap(rp, types, future=TRUE, fill.min=0, height=9, file_path = '/pred_power/heatmap_cor_aut_future_median.eps') 
+
+# autid_bio1990 = DT_aut[start == 1990 & !is.na(S.c.bio)]$aut.id
+# DT_pub_bio1990 = DT_pub[aut.id %in% autid_bio1990 & year<=2012]
+# DT_pub_bio1990[, c('P.c.all', 'P.c.bio', 'P.c.tenured')] = NULL
+# 
+# 
+# DT_lastyear = DT_pub_bio1990[, max(start), by='aut.id']
+# table(DT_lastyear[,'V1'])
